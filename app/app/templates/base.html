@@ -12,21 +12,6 @@
 
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
-    <script type='text/javascript'>
-        function plotPlotly(graph, div_plot){
-            var data = graph["data"];
-            var layout = graph["layout"];
-            layout["margin"] = {
-                "b": 20,
-                "l": 20,
-                "r": 20,
-                "t": 20
-            }
-            var config = {responsive: true}
-            Plotly.newPlot(div_plot, data, layout, config=config);
-        }
-        
-    </script>
 </head>
 
 <body>

@@ -1,5 +1,8 @@
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly
+import json
 
 import base64
 from io import BytesIO
@@ -39,7 +42,21 @@ def plotStatic(df, config={}):
     return f"<img src='data:image/png;base64,{data}'/>"
 
 
-
+def plotDynamic(df, config={}):
+    fig = px.scatter_mapbox(df[:100], 
+                        lat="dd_lat",
+                        lon="dd_lon", # which column to use to set the color of markers
+                        hover_name="name", # column added to hover information
+                        zoom=6,
+                        size_max=15,
+                        center={
+                            "lat": 52,
+                            "lon": 19
+                        })
+    fig.update_layout(mapbox_style="open-street-map")
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    
+    return fig.to_html(include_plotlyjs =False, full_html=False)
 
 if __name__ == "__main__":
     pass

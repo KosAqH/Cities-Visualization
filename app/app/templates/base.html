@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Towns visualizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+    <script type='text/javascript'>
+        function plotPlotly(graph, div_plot){
+            var data = graph["data"];
+            var layout = graph["layout"];
+            layout["margin"] = {
+                "b": 20,
+                "l": 20,
+                "r": 20,
+                "t": 20
+            }
+            var config = {responsive: true}
+            Plotly.newPlot(div_plot, data, layout, config=config);
+        }
+        
+    </script>
+</head>
+
+<body>
+    <section class="is-primary is-fullheight">
+        <div class="breadcrumb is-centered block">
+            <ul>
+              <li><a href="{{ url_for('index') }}">Map Visualization</a></li>
+              <li><a href="https://github.com/kosaqh"><i style="font-size:24px" class="fa">&#xf09b;</i></a></li>
+            </ul>
+          </div>
+        <div class="hero-body block">
+            <div class="container has-text-centered">
+               {% block content %}
+               {% endblock %}
+            </div>
+        </div>
+        <div class="block container" id="foot">
+            <p class="has-text-centered">footer</p>
+        </div>
+    </section>
+</body>
+
+</html>

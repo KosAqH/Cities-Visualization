@@ -1,3 +1,6 @@
 venv/
 __pycache__
 instance
+
+*.xlsx
+prng_csv.csv

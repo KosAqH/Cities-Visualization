@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired, URL
 
 
 class MapInput(Form):
-    phrase1 = StringField()
-    phrase2 = StringField()
+    phrase1 = StringField(validators=[DataRequired()])
+    phrase2 = StringField(validators=[DataRequired()])
 
     positioning1 = RadioField(
         label = "Position of phrase in name",
@@ -18,11 +18,13 @@ class MapInput(Form):
 
     color1 = RadioField(
         label = "Color",
-        choices=["Red", "Green", "Blue", "Purple", "Black"]
+        choices=["Red", "Green", "Blue", "Purple", "Black"],
+        default = "Red"
     )
     color2 = RadioField(
         label = "Color",
-        choices=["Red", "Green", "Blue", "Purple", "Black"]
+        choices=["Red", "Green", "Blue", "Purple", "Black"],
+        default = "Blue"
     )
 
     all_names = BooleanField( label="Use all names" )

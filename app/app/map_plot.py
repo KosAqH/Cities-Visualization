@@ -1,12 +1,52 @@
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import plotly.express as px
+import pandas as pd
 import plotly
 import json
 
 import base64
 from io import BytesIO
 
+def query(df:pd.DataFrame, query: dict):
+    print(df.shape)
+    if query["all_names"] == 'n':
+        print("not all names")
+        if query["only_indepedent"]:
+            index = df[~df["higher_rank_object_name"].isna()]
+            df.drop(index, inplace=True)
+            print("only indepedent")
+        if query["only_official"]:
+            index = df[df["status"] == "urzędowa"]
+            df.drop(index, inplace=True)
+            print("only official")
+    print(df.shape)
+    
+    # 1st condition
+    len1 = len(query["phrase1"])
+    if query["positioning1"] == "Starts":
+        df1 = df[df["name"].str.startswith(query["phrase1"])].copy()
+    elif query["positioning1"] == "Ends":
+        df1 = df[df["name"].str.endswith(query["phrase1"])].copy()
+    elif query["positioning1"] == "Contains":
+        df1 = df[df["name"].str.contains(query["phrase1"])].copy()
+
+    print(df1.shape)
+    
+    # 2nd condition
+    len2 = len(query["phrase2"])
+    if query["positioning2"] == "Starts":
+        df2 = df[df["name"].str.startswith(query["phrase2"])].copy()
+    elif query["positioning2"] == "Ends":
+        df2 = df[df["name"].str.endswith(query["phrase2"])].copy()
+    elif query["positioning2"] == "Contains":
+        df2 = df[df["name"].str.contains(query["phrase2"])].copy()
+
+    print(df2.shape)
+
+    df = pd.concat((df1, df2)).drop_duplicates()
+
+    return df
 
 def plotStatic(df, config={}):
     fig = plt.figure(figsize=(10, 10))

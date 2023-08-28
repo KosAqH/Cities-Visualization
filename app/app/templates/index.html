@@ -3,9 +3,11 @@
 {% block content %}
 
 {% macro wrap_label(field) -%}
-    <label class="label">
-        {{ field }} test
-    </label>
+{{ field.label(class_="label")}}
+{{ field }}
+    <!-- <label class="label">
+        {{ field }}
+    </label> -->
 {%- endmacro %}
 
 <div class="column is-8 is-offset-2">  
@@ -18,22 +20,27 @@
             <div class="columns block">
                 <div class="column is-half">
                     {{ wrap_label(form.phrase1) }}
-                    {{ form.positioning1 }}
-                    {{ form.color1}}
+                    {{ wrap_label(form.positioning1) }}
+                    <div class="field is-horizontal">
+                        {{ wrap_label(form.color1)}}
+                    </div>
                 </div>
                 <div class="column is-half">
-                    {{ form.phrase2 }}
-                    {{ form.positioning2 }}
-                    {{ form.color2}}
+                    {{ wrap_label(form.phrase2) }}
+                    {{ wrap_label(form.positioning2) }}
+                    {{ wrap_label(form.color2)}}
                 </div>
             </div>
 
-            <div class="block">
-                {{ form.all_names }}
-                {{ form.only_indepedent }}
-                {{ form.only_official }}
-                {{ form.submit }}
+            <div class="field">
+                {{ wrap_label(form.all_names) }}
+                {{ wrap_label(form.only_indepedent) }}
+                {{ wrap_label(form.only_official) }}
             </div>
+
+            <div class="control">
+                <button class="button is-primary">Submit</button>
+              </div>
 
         </form>
     </div>

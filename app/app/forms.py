@@ -25,7 +25,7 @@ class MapInput(Form):
         choices=["Red", "Green", "Blue", "Purple", "Black"]
     )
 
-    all_names = BooleanField()
+    all_names = BooleanField( label="Use all names" )
     
-    only_indepedent = BooleanField()
-    only_official = BooleanField()
+    only_indepedent = BooleanField(label="Use only names without superior name" )
+    only_official = BooleanField(label="Use only official names")

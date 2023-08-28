@@ -9,25 +9,27 @@ class MapInput(Form):
 
     positioning1 = RadioField(
         label = "Position of phrase in name",
-        choices = ["Starts", "Contains", "Ends"]
+        choices = ["Starts", "Contains", "Ends"],
+        validators=[DataRequired()]
     )
     positioning2 = RadioField(
         label = "Position of phrase in name",
-        choices = ["Starts", "Contains", "Ends"]
+        choices = ["Starts", "Contains", "Ends"],
+        validators=[DataRequired()]
     )
 
     color1 = RadioField(
         label = "Color",
         choices=["Red", "Green", "Blue", "Purple", "Black"],
-        default = "Red"
+        default = "Red",
+        validators=[DataRequired()]
     )
     color2 = RadioField(
         label = "Color",
         choices=["Red", "Green", "Blue", "Purple", "Black"],
-        default = "Blue"
+        default = "Blue",
+        validators=[DataRequired()]
     )
-
-    all_names = BooleanField( label="Use all names" )
     
     only_indepedent = BooleanField(label="Use only names without superior name" )
     only_official = BooleanField(label="Use only official names")

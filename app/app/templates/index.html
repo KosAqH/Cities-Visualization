@@ -3,16 +3,31 @@
 {% block content %}
 
 <div class="column is-8 is-offset-2">  
-    <div ></div>
+    <div>
+        <form method="POST" name="url_form" action="/index">
+            <div class="columns block">
+                <div class="column is-half">
+                    {{ form.phrase }}
+                    {{ form.positioning }}
+                    {{ form.color}}
+                </div>
+                <div class="column is-half">
+                    {{ form.phrase }}
+                    {{ form.positioning }}
+                    {{ form.color}}
+                </div>
+            </div>
 
-    <div class="columns block">
-        <div class="column is-half">
-            form 1
-        </div>
-        <div class="column is-half">
-            form 2
-        </div>
+            <div class="block">
+                {{ form.all_names }}
+                {{ form.only_indepedent }}
+                {{ form.only_official }}
+                {{ form.submit }}
+            </div>
+
+        </form>
     </div>
+    
     <!-- <div class="field">
         <label class="label">Name</label>
         <div class="control">

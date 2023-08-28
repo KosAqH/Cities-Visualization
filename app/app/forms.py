@@ -4,14 +4,23 @@ from wtforms.validators import DataRequired, URL
 
 
 class MapInput(Form):
-    phrase = StringField()
+    phrase1 = StringField()
+    phrase2 = StringField()
 
-    positioning = RadioField(
+    positioning1 = RadioField(
+        label = "Position of phrase in name",
+        choices = ["Starts", "Contains", "Ends"]
+    )
+    positioning2 = RadioField(
         label = "Position of phrase in name",
         choices = ["Starts", "Contains", "Ends"]
     )
 
-    color = RadioField(
+    color1 = RadioField(
+        label = "Color",
+        choices=["Red", "Green", "Blue", "Purple", "Black"]
+    )
+    color2 = RadioField(
         label = "Color",
         choices=["Red", "Green", "Blue", "Purple", "Black"]
     )

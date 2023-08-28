@@ -2,19 +2,29 @@
 
 {% block content %}
 
+{% macro wrap_label(field) -%}
+    <label class="label">
+        {{ field }} test
+    </label>
+{%- endmacro %}
+
 <div class="column is-8 is-offset-2">  
-    <div>
+    <div class="block control">
         <form method="POST" name="url_form" action="/index">
+            <!-- {% for field in form %}
+                {{ field.label(class_='label') }}
+                {{ field(class_='control') }}
+            {% endfor %} -->
             <div class="columns block">
                 <div class="column is-half">
-                    {{ form.phrase }}
-                    {{ form.positioning }}
-                    {{ form.color}}
+                    {{ wrap_label(form.phrase1) }}
+                    {{ form.positioning1 }}
+                    {{ form.color1}}
                 </div>
                 <div class="column is-half">
-                    {{ form.phrase }}
-                    {{ form.positioning }}
-                    {{ form.color}}
+                    {{ form.phrase2 }}
+                    {{ form.positioning2 }}
+                    {{ form.color2}}
                 </div>
             </div>
 

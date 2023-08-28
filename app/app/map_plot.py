@@ -8,54 +8,94 @@ import json
 import base64
 from io import BytesIO
 
-def match_string(df: pd.DataFrame, 
-                 phrase: str,
-                 pos: str, 
-                 color: str) -> pd.DataFrame:
-    if pos == "Starts":
-        new_df = df[df["name"].str.startswith(phrase)].copy()
-    elif pos == "Ends":
-        new_df = df[df["name"].str.endswith(phrase)].copy()
-    elif pos == "Contains":
-        new_df = df[df["name"].str.contains(phrase)].copy()
+class MapPlot():
+    def __init__(self, df, requested_data) -> None:
+        self.request = requested_data
+        self.df = df
+    
+    def match_string(self,
+                     phrase: str,
+                     pos: str, 
+                     color: str) -> pd.DataFrame:
+        print(self.df.columns)
+        
+        if pos == "Starts":
+            new_df = self.df[self.df["name"].str.startswith(phrase.capitalize())].copy()
+        elif pos == "Ends":
+            new_df = self.df[self.df["name"].str.endswith(phrase)].copy()
+        elif pos == "Contains":
+            new_df = self.df[self.df["name"].str.contains(phrase)].copy()
 
-    new_df["color"] = color
-    return new_df
+        new_df["color"] = color
+        return new_df
 
 
-def query(df:pd.DataFrame, query: dict):
-    print(df.shape)
-    if query["all_names"] == 'n':
-        print("not all names")
-        if query["only_indepedent"]:
-            index = df[~df["higher_rank_object_name"].isna()]
-            df.drop(index, inplace=True)
+    def query(self, df:pd.DataFrame = None, query: dict = {}):
+        print(self.df.shape)
+        if "only_indepedent" in self.request and self.request["only_indepedent"]:
+            index = self.df[~self.df["higher_rank_object_name"].isna()].index
+            print(index)
+            self.df.drop(index, inplace=True, axis=0)
             print("only indepedent")
-        if query["only_official"]:
-            index = df[df["status"] == "urzędowa"]
-            df.drop(index, inplace=True)
+        if "only_official" in self.request and self.request["only_official"]:
+            index = self.df[self.df["status"] != "urzędowa"].index
+            print(index)
+            self.df.drop(index, inplace=True, axis=0)
             print("only official")
-    print(df.shape)
-    
-    # 1st condition
-    df1 = match_string(df, 
-                       query["phrase1"], 
-                       query["positioning1"], 
-                       query["color1"])
+        
+        # 1st condition
+        df1 = self.match_string( 
+                        self.request["phrase1"], 
+                        self.request["positioning1"], 
+                        self.request["color1"])
+        
+        # 2nd condition
+        df2 = self.match_string( 
+                        self.request["phrase2"], 
+                        self.request["positioning2"], 
+                        self.request["color2"])
 
-    print(df1.shape)
-    
-    # 2nd condition
-    df2 = match_string(df, 
-                       query["phrase2"], 
-                       query["positioning2"], 
-                       query["color2"])
+        self.df = pd.concat((df1, df2)).drop_duplicates()
 
-    df = pd.concat((df1, df2)).drop_duplicates()
+        self.df1 = df1
+        self.df2 = df2
 
-    return df
+class MapPlotStatic(MapPlot):
+    def plotStatic(self):
+        fig = plt.figure(figsize=(10, 10))
+        m = Basemap(projection="lcc", resolution='i', 
+                    width=7e5, height=7e5, 
+                    lat_0=52, lon_0=19.2,
+                    )
 
-def plotStatic(df, config={}):
+        m.drawcoastlines(linewidth = 1)
+        m.drawcountries(linewidth = 2)
+        m.drawrivers(linewidth = 1, color="#add8e6")
+
+        # Map (long, lat) to (x, y) for plotting
+        x, y = m(
+            self.df1["dd_lon"].values.tolist(),
+            self.df1["dd_lat"].values.tolist()
+        )
+
+        m.scatter(x, y, color=self.request["color1"], label="owo", alpha=0.5)
+
+        x, y = m(
+            self.df2["dd_lon"].values.tolist(),
+            self.df2["dd_lat"].values.tolist()
+        )
+
+        m.scatter(x, y, color=self.request["color2"], label="ów", alpha=0.5)
+        plt.legend(loc='lower left', fontsize='xx-large', framealpha=1)
+
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        # Embed the result in the html output.
+        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+        return f"<img src='data:image/png;base64,{data}'/>"    
+
+
+def plotStatic(df, color1, color2, config={}):
     fig = plt.figure(figsize=(10, 10))
     m = Basemap(projection="lcc", resolution='i', 
                 width=7e5, height=7e5, 

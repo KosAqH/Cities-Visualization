@@ -8,6 +8,21 @@ import json
 import base64
 from io import BytesIO
 
+def match_string(df: pd.DataFrame, 
+                 phrase: str,
+                 pos: str, 
+                 color: str) -> pd.DataFrame:
+    if pos == "Starts":
+        new_df = df[df["name"].str.startswith(phrase)].copy()
+    elif pos == "Ends":
+        new_df = df[df["name"].str.endswith(phrase)].copy()
+    elif pos == "Contains":
+        new_df = df[df["name"].str.contains(phrase)].copy()
+
+    new_df["color"] = color
+    return new_df
+
+
 def query(df:pd.DataFrame, query: dict):
     print(df.shape)
     if query["all_names"] == 'n':
@@ -23,26 +38,18 @@ def query(df:pd.DataFrame, query: dict):
     print(df.shape)
     
     # 1st condition
-    len1 = len(query["phrase1"])
-    if query["positioning1"] == "Starts":
-        df1 = df[df["name"].str.startswith(query["phrase1"])].copy()
-    elif query["positioning1"] == "Ends":
-        df1 = df[df["name"].str.endswith(query["phrase1"])].copy()
-    elif query["positioning1"] == "Contains":
-        df1 = df[df["name"].str.contains(query["phrase1"])].copy()
+    df1 = match_string(df, 
+                       query["phrase1"], 
+                       query["positioning1"], 
+                       query["color1"])
 
     print(df1.shape)
     
     # 2nd condition
-    len2 = len(query["phrase2"])
-    if query["positioning2"] == "Starts":
-        df2 = df[df["name"].str.startswith(query["phrase2"])].copy()
-    elif query["positioning2"] == "Ends":
-        df2 = df[df["name"].str.endswith(query["phrase2"])].copy()
-    elif query["positioning2"] == "Contains":
-        df2 = df[df["name"].str.contains(query["phrase2"])].copy()
-
-    print(df2.shape)
+    df2 = match_string(df, 
+                       query["phrase2"], 
+                       query["positioning2"], 
+                       query["color2"])
 
     df = pd.concat((df1, df2)).drop_duplicates()
 

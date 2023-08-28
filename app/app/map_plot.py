@@ -47,6 +47,10 @@ def plotDynamic(df, config={}):
                         lat="dd_lat",
                         lon="dd_lon", # which column to use to set the color of markers
                         hover_name="name", # column added to hover information
+                        hover_data={
+                            "dd_lat": False,
+                            "dd_lon": False
+                        },
                         zoom=6,
                         size_max=15,
                         center={

@@ -118,12 +118,7 @@ class MapPlotDynamic(MapPlot):
             self.request["color2"]: self.prepare_label(self.request["phrase2"], 
                                                        self.request["positioning2"]),                                           
         }
-        print(labels)
-        l = [self.request["color1"], self.request["color2"]]
-        color_map = dict(zip(l, l))
         labels_flip = dict((v, k) for k, v in labels.items())
-        self.df["phrase"] = ""
-        print(labels.keys())
         for c in labels.keys():
             self.df.loc[(self.df["color"] == c),"phrase"] = labels[c]
 
@@ -160,7 +155,7 @@ class MapPlotDynamic(MapPlot):
         return fig.to_html(include_plotlyjs =False, full_html=False)
 
 
-def plotStatic(df, color1, color2, config={}):
+def plotStatic():
     fig = plt.figure(figsize=(10, 10))
     m = Basemap(projection="lcc", resolution='i', 
                 width=7e5, height=7e5, 
@@ -171,22 +166,6 @@ def plotStatic(df, color1, color2, config={}):
     m.drawcountries(linewidth = 2)
     m.drawrivers(linewidth = 1, color="#add8e6")
 
-    # Map (long, lat) to (x, y) for plotting
-    x, y = m(
-        df[df["name"].str[-3:] == "owo"]["dd_lon"].values.tolist(),
-        df[df["name"].str[-3:] == "owo"]["dd_lat"].values.tolist()
-    )
-
-    m.scatter(x, y, color="red", label="owo", alpha=0.5)
-
-    x, y = m(
-        df[df["name"].str[-2:] == "ów"]["dd_lon"].values.tolist(),
-        df[df["name"].str[-2:] == "ów"]["dd_lat"].values.tolist()
-    )
-
-    m.scatter(x, y, color="blue", label="ów", alpha=0.5)
-    plt.legend(loc='lower left', fontsize='xx-large', framealpha=1)
-
     buf = BytesIO()
     fig.savefig(buf, format="png")
     # Embed the result in the html output.
@@ -194,16 +173,9 @@ def plotStatic(df, color1, color2, config={}):
     return f"<img src='data:image/png;base64,{data}'/>"
 
 
-def plotDynamic(df, config={}):
-    fig = px.scatter_mapbox(df[:100], 
-                        lat="dd_lat",
-                        lon="dd_lon", # which column to use to set the color of markers
-                        hover_name="name", # column added to hover information
-                        hover_data={
-                            "dd_lat": False,
-                            "dd_lon": False
-                        },
-                        zoom=6,
+def plotDynamicDefault():
+    fig = px.scatter_mapbox(
+                        zoom=5,
                         size_max=15,
                         center={
                             "lat": 52,

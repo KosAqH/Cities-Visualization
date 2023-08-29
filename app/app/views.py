@@ -1,5 +1,5 @@
 from . import app
-from flask import render_template, request
+from flask import render_template, request, jsonify
 import pandas as pd
 
 from . import map_plot as mp
@@ -23,3 +23,15 @@ def index():
 
     input_form = MapInput()
     return render_template('index.html', map_static=ms, map_dynamic=md, form=input_form)
+
+@app.route("/static_plot", methods=["POST"])
+def staticPlot():
+    if request.method == 'POST':
+        print(request.form)
+        df = pd.read_csv("data\\prepared_data.csv")
+        obj_static = mp.MapPlotStatic(df, dict(request.form))
+        obj_static.query()
+        ms = obj_static.plot()
+        # ms = "teścik"
+
+    return jsonify(ms)

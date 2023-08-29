@@ -60,8 +60,11 @@ class MapPlot():
         self.df1 = df1
         self.df2 = df2
 
+    def prepare_label(phrase, pos):
+        if pos == "Contains"
+
 class MapPlotStatic(MapPlot):
-    def plotStatic(self):
+    def plot(self):
         fig = plt.figure(figsize=(10, 10))
         m = Basemap(projection="lcc", resolution='i', 
                     width=7e5, height=7e5, 
@@ -92,7 +95,41 @@ class MapPlotStatic(MapPlot):
         fig.savefig(buf, format="png")
         # Embed the result in the html output.
         data = base64.b64encode(buf.getbuffer()).decode("ascii")
-        return f"<img src='data:image/png;base64,{data}'/>"    
+        return f"<img src='data:image/png;base64,{data}'/>"  
+
+class MapPlotDynamic(MapPlot):
+    def plot(self):
+        fig = px.scatter_mapbox(self.df, 
+                            lat="dd_lat",
+                            lon="dd_lon", # which column to use to set the color of markers
+                            hover_name="name", # column added to hover information
+                            hover_data={
+                                "dd_lat": False,
+                                "dd_lon": False,
+                                "color": None
+                            },
+                            color="color",
+                            color_discrete_map = {
+                                "Red": "red",
+                                "Blue": "blue"
+                            },
+                            zoom=6,
+                            size_max=15,
+                            center={
+                                "lat": 52,
+                                "lon": 19
+                            })
+        fig.update_layout(mapbox_style="open-street-map")
+        fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+        fig.update_layout(legend=dict(
+                            yanchor="bottom",
+                            y=0.01,
+                            xanchor="left",
+                            x=0.01)
+                            )
+        
+        
+        return fig.to_html(include_plotlyjs =False, full_html=False)
 
 
 def plotStatic(df, color1, color2, config={}):

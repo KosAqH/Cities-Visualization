@@ -11,8 +11,6 @@ def index():
     ms = None
     md = None
     if request.method == 'POST':
-        print(request.form)
-        # print(mp.query(df, dict(request.form)).sort_values(by="name"))
         obj_static = mp.MapPlotStatic(df, dict(request.form))
         obj_static.query()
         ms = obj_static.plot()

@@ -60,8 +60,13 @@ class MapPlot():
         self.df1 = df1
         self.df2 = df2
 
-    def prepare_label(phrase, pos):
-        if pos == "Contains"
+    def prepare_label(self, phrase, pos):
+        if pos == "Starts":
+            return f"{phrase}-"
+        elif pos == "Ends":
+            return f"-{phrase}"
+        else:
+            return phrase
 
 class MapPlotStatic(MapPlot):
     def plot(self):
@@ -81,14 +86,22 @@ class MapPlotStatic(MapPlot):
             self.df1["dd_lat"].values.tolist()
         )
 
-        m.scatter(x, y, color=self.request["color1"], label="owo", alpha=0.5)
+        m.scatter(x, y, 
+                    color=self.request["color1"], 
+                    label=self.prepare_label(self.request["phrase1"], 
+                                            self.request["positioning1"]), 
+                    alpha=0.5)
 
         x, y = m(
             self.df2["dd_lon"].values.tolist(),
             self.df2["dd_lat"].values.tolist()
         )
 
-        m.scatter(x, y, color=self.request["color2"], label="ów", alpha=0.5)
+        m.scatter(x, y, 
+                  color=self.request["color2"], 
+                  label=self.prepare_label(self.request["phrase2"], 
+                                           self.request["positioning2"]), 
+                  alpha=0.5)
         plt.legend(loc='lower left', fontsize='xx-large', framealpha=1)
 
         buf = BytesIO()
@@ -99,6 +112,22 @@ class MapPlotStatic(MapPlot):
 
 class MapPlotDynamic(MapPlot):
     def plot(self):
+        labels = {
+            self.request["color1"]: self.prepare_label(self.request["phrase1"], 
+                                                       self.request["positioning1"]),
+            self.request["color2"]: self.prepare_label(self.request["phrase2"], 
+                                                       self.request["positioning2"]),                                           
+        }
+        print(labels)
+        l = [self.request["color1"], self.request["color2"]]
+        color_map = dict(zip(l, l))
+        labels_flip = dict((v, k) for k, v in labels.items())
+        self.df["phrase"] = ""
+        print(labels.keys())
+        for c in labels.keys():
+            self.df.loc[(self.df["color"] == c),"phrase"] = labels[c]
+
+
         fig = px.scatter_mapbox(self.df, 
                             lat="dd_lat",
                             lon="dd_lon", # which column to use to set the color of markers
@@ -108,12 +137,11 @@ class MapPlotDynamic(MapPlot):
                                 "dd_lon": False,
                                 "color": None
                             },
-                            color="color",
-                            color_discrete_map = {
-                                "Red": "red",
-                                "Blue": "blue"
-                            },
-                            zoom=6,
+                            color="phrase",
+                            # color_discrete_map= "identity",
+                            color_discrete_map = labels_flip,
+                            labels=labels,
+                            zoom=5,
                             size_max=15,
                             center={
                                 "lat": 52,

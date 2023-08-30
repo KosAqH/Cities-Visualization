@@ -17,7 +17,6 @@ class MapPlot():
                      phrase: str,
                      pos: str, 
                      color: str) -> pd.DataFrame:
-        print(self.df.columns)
         
         if pos == "Starts":
             new_df = self.df[self.df["name"].str.startswith(phrase.capitalize())].copy()
@@ -31,7 +30,6 @@ class MapPlot():
 
 
     def query(self, df:pd.DataFrame = None, query: dict = {}):
-        print(self.df.shape)
         if "only_indepedent" in self.request and self.request["only_indepedent"]:
             index = self.df[~self.df["higher_rank_object_name"].isna()].index
             print(index)
@@ -154,37 +152,6 @@ class MapPlotDynamic(MapPlot):
         
         return fig.to_html(include_plotlyjs = False, full_html=False)
 
-
-def plotStatic():
-    fig = plt.figure(figsize=(10, 10))
-    m = Basemap(projection="lcc", resolution='i', 
-                width=7e5, height=7e5, 
-                lat_0=52, lon_0=19.2,
-                )
-
-    m.drawcoastlines(linewidth = 1)
-    m.drawcountries(linewidth = 2)
-    m.drawrivers(linewidth = 1, color="#add8e6")
-
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    # Embed the result in the html output.
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-    return f"<img src='data:image/png;base64,{data}'/>"
-
-
-def plotDynamicDefault():
-    fig = px.scatter_mapbox(
-                        zoom=5,
-                        size_max=15,
-                        center={
-                            "lat": 52,
-                            "lon": 19
-                        })
-    fig.update_layout(mapbox_style="open-street-map")
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    
-    return fig.to_html(include_plotlyjs =False, full_html=False, default_width='80%')
 
 if __name__ == "__main__":
     pass

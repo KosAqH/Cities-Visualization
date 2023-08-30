@@ -8,22 +8,8 @@ from .forms import MapInput
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if request.method == 'POST':
-        df = pd.read_csv("data\\prepared_data.csv")
-
-        obj_static = mp.MapPlotStatic(df, dict(request.form))
-        obj_static.query()
-        ms = obj_static.plot()
-
-        obj_dynamic = mp.MapPlotDynamic(df, dict(request.form))
-        obj_dynamic.query()
-        md = obj_dynamic.plot()
-    else:
-        ms = mp.plotStatic()
-        md = mp.plotDynamicDefault()
-
     input_form = MapInput()
-    return render_template('index.html', map_static=ms, map_dynamic=md, form=input_form)
+    return render_template('index.html', form=input_form)
 
 @app.route("/static_plot", methods=["POST"])
 def staticPlot():
@@ -32,7 +18,6 @@ def staticPlot():
         obj_static = mp.MapPlotStatic(df, dict(request.form))
         obj_static.query()
         ms = obj_static.plot()
-        # ms = "teścik"
 
     return jsonify(ms)
 
@@ -50,5 +35,4 @@ def dynamicPlot():
         "div" : f"<div {re.findall(r'<div (.+?)></div>', md)[0]}></div>",
         "script": l[0][1]
     }
-    print(response)
     return jsonify(response)

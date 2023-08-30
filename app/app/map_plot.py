@@ -2,8 +2,6 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
-import plotly
-import json
 
 import base64
 from io import BytesIO
@@ -32,14 +30,10 @@ class MapPlot():
     def query(self, df:pd.DataFrame = None, query: dict = {}):
         if "only_indepedent" in self.request and self.request["only_indepedent"]:
             index = self.df[~self.df["higher_rank_object_name"].isna()].index
-            print(index)
             self.df.drop(index, inplace=True, axis=0)
-            print("only indepedent")
         if "only_official" in self.request and self.request["only_official"]:
             index = self.df[self.df["status"] != "urzędowa"].index
-            print(index)
             self.df.drop(index, inplace=True, axis=0)
-            print("only official")
         
         # 1st condition
         df1 = self.match_string( 

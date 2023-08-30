@@ -47,5 +47,7 @@ if __name__ == "__main__":
                      }, 
                 inplace = True)
     
+    df["name"] = df["name"].str.lower()
+    
     calc_coordinates(df)
     df.to_csv("data\\prepared_data.csv", index=False)

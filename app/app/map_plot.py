@@ -15,9 +15,10 @@ class MapPlot():
                      phrase: str,
                      pos: str, 
                      color: str) -> pd.DataFrame:
-        
+        phrase = phrase.lower()
+
         if pos == "Starts":
-            new_df = self.df[self.df["name"].str.startswith(phrase.capitalize())].copy()
+            new_df = self.df[self.df["name"].str.startswith(phrase)].copy()
         elif pos == "Ends":
             new_df = self.df[self.df["name"].str.endswith(phrase)].copy()
         elif pos == "Contains":
@@ -114,6 +115,7 @@ class MapPlotDynamic(MapPlot):
         for c in labels.keys():
             self.df.loc[(self.df["color"] == c),"phrase"] = labels[c]
 
+        self.df["name"] = self.df["name"].str.capitalize()
 
         fig = px.scatter_mapbox(self.df, 
                             lat="dd_lat",

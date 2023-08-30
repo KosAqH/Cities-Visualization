@@ -39,10 +39,3 @@
 .radio_form label:hover {
     background-color: #dfd;
   }
-
-div#map_container{
-    aspect-ratio: 1;
-}
-svg {
-    aspect-ratio: 1;
-}

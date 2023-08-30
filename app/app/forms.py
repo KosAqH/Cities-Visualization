@@ -10,26 +10,35 @@ class MapInput(Form):
     positioning1 = RadioField(
         label = "Position of phrase in name",
         choices = ["Starts", "Contains", "Ends"],
-        validators=[DataRequired()]
+        validators=[DataRequired()],
+        default = "Starts"
     )
     positioning2 = RadioField(
         label = "Position of phrase in name",
         choices = ["Starts", "Contains", "Ends"],
-        validators=[DataRequired()]
+        validators=[DataRequired()],
+        default = "Starts"
     )
 
     color1 = RadioField(
         label = "Color",
-        choices=["Red", "Green", "Blue", "Purple", "Black"],
+        choices=["Red", "Blue", "Green", "Purple", "Black"],
         default = "Red",
         validators=[DataRequired()]
     )
     color2 = RadioField(
         label = "Color",
-        choices=["Red", "Green", "Blue", "Purple", "Black"],
+        choices=["Red", "Blue", "Green", "Purple", "Black"],
         default = "Blue",
         validators=[DataRequired()]
     )
     
     only_indepedent = BooleanField(label="Use only names without superior name" )
     only_official = BooleanField(label="Use only official names")
+
+    type_plot = RadioField(
+        label = "Type of plot",
+        choices=["Static", "Dynamic"],
+        default = "Static",
+        validators=[DataRequired()]
+    )

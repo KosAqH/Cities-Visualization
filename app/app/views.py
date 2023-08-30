@@ -27,7 +27,6 @@ def index():
 @app.route("/static_plot", methods=["POST"])
 def staticPlot():
     if request.method == 'POST':
-        print(request.form)
         df = pd.read_csv("data\\prepared_data.csv")
         obj_static = mp.MapPlotStatic(df, dict(request.form))
         obj_static.query()
@@ -35,3 +34,13 @@ def staticPlot():
         # ms = "teścik"
 
     return jsonify(ms)
+
+@app.route("/dynamic_plot", methods=["POST"])
+def dynamicPlot():
+    if request.method == 'POST':
+        df = pd.read_csv("data\\prepared_data.csv")
+        obj_dynamic = mp.MapPlotDynamic(df, dict(request.form))
+        obj_dynamic.query()
+        md = obj_dynamic.plot()
+    print(md)
+    return jsonify(md)

@@ -152,7 +152,7 @@ class MapPlotDynamic(MapPlot):
                             )
         
         
-        return fig.to_html(include_plotlyjs =False, full_html=False)
+        return fig.to_html(include_plotlyjs = False, full_html=False)
 
 
 def plotStatic():
@@ -184,7 +184,7 @@ def plotDynamicDefault():
     fig.update_layout(mapbox_style="open-street-map")
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     
-    return fig.to_html(include_plotlyjs =False, full_html=False)
+    return fig.to_html(include_plotlyjs =False, full_html=False, default_width='80%')
 
 if __name__ == "__main__":
     pass

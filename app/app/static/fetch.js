@@ -1,11 +1,12 @@
 const form = document.querySelector('form');
-const static = document.getElementsByName('static_map_container')[0];
+const static_map_container = document.getElementsByName('static_map_container')[0];
+const dynamic_map_container = document.getElementsByName('dynamic_map_container')[0];
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const form_data = new FormData(form);
-    // const form_data = new FormData(e.target);
+
     let request_options = {
         method: "POST",
         headers: {
@@ -14,15 +15,18 @@ form.addEventListener('submit', (e) => {
         body: form_data,
     }
 
-    console.log(request_options);
+    const URL = "/static_plot";
+    fetch_plot(URL, static_map_container);
 
-    const URL = "/static_plot"
+    const URL2 = "/dynamic_plot";
+    fetch_plot(URL2, dynamic_map_container);
+})
 
+function fetch_plot(URL, container){
     fetch(URL, request_options)
     .then(response => response.json())
     .then((data) => {
-        static.innerHTML = data;
+        container.appendChild(data);
     })
     .catch((err) => console.log(err))
-})
-
+}

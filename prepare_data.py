@@ -15,11 +15,13 @@ def transform_coord(df: pd.DataFrame,
     df[f"dd_{col}"] = df[[f"d_{col}", f"m_{col}", f"s_{col}"]].apply(convert_dms_to_dd, axis=1)
     df.drop(columns=[f"d_{col}", f"m_{col}", f"s_{col}"], inplace=True)
 
-def calc_coordinates(df):
+def calc_coordinates(df: pd.DataFrame):
     df[["lat", "lon"]] = df["geo_coords"].str.split(' ', expand=True)
 
     transform_coord(df, "lat")
     transform_coord(df, "lon")
+
+    df.drop(columns=["lat", "lon", "geo_coords"], inplace=True)
 
 if __name__ == "__main__":
     df = pd.read_excel("data\\PRNG_MIEJSCOWOSCI_XLSX.xlsx",

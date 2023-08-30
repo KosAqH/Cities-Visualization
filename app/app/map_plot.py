@@ -2,12 +2,37 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
-
 import base64
 from io import BytesIO
+import re
 
 class MapPlot():
-    def __init__(self, df, requested_data) -> None:
+    """
+    Class prepare data for plotting, considering input passed by user.
+
+        Usage: first you have to create new object, and passed data as parameters.
+            Then you should use query function to transform data. If you want to 
+            plot map to visualize data, you should actually used one of derivative
+            classes: MapPlotStatic or MapPlotDynamic.
+ 
+        Attributes:
+            self.df (pd.DataFrame) - main df used by class. At first it contains
+                all data, after querying it contains only data that satisfy both
+                conditions specified by user.
+            self.request (dict) - dictionary contains conditions specified by user
+            self.df1 (pd.DataFrame) - contains data that satisfy the first condition
+            self.df2 (pd.DataFrame) - contains data that satisfy the second condition
+    """
+    def __init__(self, df: pd.DataFrame, requested_data:dict) -> None:
+        """
+        MapPlot class constructor. Returns nothing.
+
+            Args:
+                df (pd.DataFrame): Dataframe object containing all prepared
+                    data for visualization.
+                requested_data (dict): Dictionary object containing input
+                    passed by user.
+        """
         self.request = requested_data
         self.df = df
     
@@ -15,6 +40,21 @@ class MapPlot():
                      phrase: str,
                      pos: str, 
                      color: str) -> pd.DataFrame:
+        '''
+        Returns the Dataframe containing values only for rows, where city names 
+            satisfy conditions specified by user.
+
+            Args:
+                phrase (str): phrase passed by user
+                pos (str): one of the following: "Starts", "Contains" or "Ends"
+                color (str): one of the following: "Red", "Blue", "Green",
+                    "Purple", "Black". 
+
+            Returns:
+                new_df(pd.DataFrame): The Dataframe containing only rows where 
+                    city names satisfy conditions specified by user. The Dataframe
+                    contains also color column, that will be used to plotting.
+        '''
         phrase = phrase.lower()
 
         if pos == "Starts":
@@ -28,7 +68,14 @@ class MapPlot():
         return new_df
 
 
-    def query(self, df:pd.DataFrame = None, query: dict = {}):
+    def query(self) -> None:
+        '''
+        Function create three Dataframes. Dataframes 'df1' and 'df2'contain 
+        rows corresponding to each of the queries passed by user. Dataframe 
+        'df' is a concatenation of those.
+        
+        No value is returned - all dataframes are saved as a class attributes.
+        '''
         if "only_indepedent" in self.request and self.request["only_indepedent"]:
             index = self.df[~self.df["higher_rank_object_name"].isna()].index
             self.df.drop(index, inplace=True, axis=0)
@@ -53,7 +100,20 @@ class MapPlot():
         self.df1 = df1
         self.df2 = df2
 
-    def prepare_label(self, phrase, pos):
+    def prepare_label(self, phrase: str, pos: str) -> str:
+        '''
+        Returns the phrase passed by user with '-' character attached 
+        at the front (if the pos parameter is equal to "Starts") or at
+        the end (if the pos parameter is equal to "Ends"). For any other
+        values the phrase is returned without any modifications.
+
+            Args:
+                phrase (str): phrase passed by user.
+                pos (str): one of the following: "Starts", "Contains" or "Ends"
+
+            Returns:
+                phrase (str): Phrase with attached '-' character.
+        '''
         if pos == "Starts":
             return f"{phrase}-"
         elif pos == "Ends":
@@ -62,7 +122,16 @@ class MapPlot():
             return phrase
 
 class MapPlotStatic(MapPlot):
-    def plot(self):
+    """
+    Class extends MapPlot class with creating static plots.
+    """
+    def plot(self) -> str:
+        """
+        Function creates static plot and returns it as as a base64 encoded image.
+
+            Returns:
+                plot (str): Map image encoded as base64 string.
+        """
         fig = plt.figure(figsize=(10, 10))
         m = Basemap(projection="lcc", resolution='i', 
                     width=7e5, height=7e5, 
@@ -100,11 +169,21 @@ class MapPlotStatic(MapPlot):
         buf = BytesIO()
         fig.savefig(buf, format="png")
         # Embed the result in the html output.
-        data = base64.b64encode(buf.getbuffer()).decode("ascii")
-        return f"<img src='data:image/png;base64,{data}'/>"  
+        encoded_plot = base64.b64encode(buf.getbuffer()).decode("ascii")
+        plot = f"<img src='data:image/png;base64,{encoded_plot}'/>"
+        return plot
 
 class MapPlotDynamic(MapPlot):
-    def plot(self):
+    """
+    Class extends MapPlot class with creating interactive plots.
+    """
+    def plot(self) -> str:
+        """
+        Function creates dynamic plot and returns it as as a html string.
+
+            Returns:
+                plot (str): Map image as a html string.
+        """
         labels = {
             self.request["color1"]: self.prepare_label(self.request["phrase1"], 
                                                        self.request["positioning1"]),
@@ -145,9 +224,27 @@ class MapPlotDynamic(MapPlot):
                             x=0.01)
                             )
         
-        
-        return fig.to_html(include_plotlyjs = False, full_html=False)
+        plot = fig.to_html(include_plotlyjs = False, full_html=False)
+        return plot
 
+    def split_plot(self, plot: str) -> dict:
+        """
+        Function takes dynamic plot and splits it to two parts. The first is the
+        actual JS script that is rendering plot on a page. The second is div, which
+        is a container where plot will be put in.
+
+            Args:
+                plot (str): Map image as a html string.
+            Returns:
+                d (dict): Dictionary containing splitted map_image.
+        """
+        l = re.findall(r"<script(.*?)>(.*?)</script>", plot)
+        d = {
+            "div" : f"<div {re.findall(r'<div (.+?)></div>', plot)[0]}></div>",
+            "script": l[0][1]
+        }
+
+        return d
 
 if __name__ == "__main__":
     pass

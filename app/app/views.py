@@ -1,7 +1,6 @@
 from . import app
 from flask import render_template, request, jsonify
 import pandas as pd
-import re
 
 from . import map_plot as mp
 from .forms import MapInput
@@ -28,11 +27,6 @@ def dynamicPlot():
         obj_dynamic = mp.MapPlotDynamic(df, dict(request.form))
         obj_dynamic.query()
         md = obj_dynamic.plot()
-
-        l = re.findall(r"<script(.*?)>(.*?)</script>", md)
-        response = {
-            "div" : f"<div {re.findall(r'<div (.+?)></div>', md)[0]}></div>",
-            "script": l[0][1]
-        }
+        response = obj_dynamic.split_plot(md)
 
     return jsonify(response)

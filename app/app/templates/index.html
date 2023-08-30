@@ -19,12 +19,12 @@
 
 {%- endmacro %}
 
-{% macro render_radios(field) -%}
+{% macro render_radios(field, cols) -%}
     <div class="control">
         <label for={{field.id}} class="label">
             {{field.label.text}}
         </label>  
-        <div class="control radio_form">
+        <div class="control radio_form {{cols}}">
             {% for subfield in field %}
             {{ subfield }}
                     <label for={{subfield.id}}>
@@ -46,10 +46,10 @@
                         </div>
                     </div>
                     <div class="field">
-                        {{ render_radios(form.positioning1) }}
+                        {{ render_radios(form.positioning1, "inline-grid-three-cols") }}
                     </div>
                     <div class="field">
-                        {{ render_radios(form.color1)}}
+                        {{ render_radios(form.color1, "inline-grid-five-cols")}}
                     </div>
                 </div>
                 <div class="column is-half">
@@ -59,10 +59,10 @@
                         </div>
                     </div>
                     <div class="field">
-                        {{ render_radios(form.positioning2) }}
+                        {{ render_radios(form.positioning2, "inline-grid-three-cols") }}
                     </div>
                     <div class="field">
-                        {{ render_radios(form.color2)}}
+                        {{ render_radios(form.color2, "inline-grid-five-cols")}}
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
             </div>
 
             <div class="field">
-                {{ render_radios(form.type_plot)}}
+                {{ render_radios(form.type_plot, "inline-grid-two-cols")}}
             </div>
 
             <div class="field">

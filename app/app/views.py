@@ -29,10 +29,10 @@ def dynamicPlot():
         obj_dynamic.query()
         md = obj_dynamic.plot()
 
-    l = re.findall(r"<script(.*?)>(.*?)</script>", md)
+        l = re.findall(r"<script(.*?)>(.*?)</script>", md)
+        response = {
+            "div" : f"<div {re.findall(r'<div (.+?)></div>', md)[0]}></div>",
+            "script": l[0][1]
+        }
 
-    response = {
-        "div" : f"<div {re.findall(r'<div (.+?)></div>', md)[0]}></div>",
-        "script": l[0][1]
-    }
     return jsonify(response)

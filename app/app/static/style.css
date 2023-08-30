@@ -1,3 +1,32 @@
+/*Form*/
+.radio_form label:first-of-type{
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+.radio_form label:last-of-type{
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+.radio_form input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+  }
+.radio_form label {
+    display: inline-block;
+    margin: 0;
+    text-align: center;
+    padding: 10px 5px;
+    border: 1px solid #aaa;
+}
+.radio_form input:checked+label {
+    background-color:#e3e3e3;
+    border-color: #c3c3c3;
+}
+.radio_form label:hover {
+    background-color: #dfd;
+  }
+
 div#map_container{
     aspect-ratio: 1;
 }

@@ -6,6 +6,8 @@ import base64
 from io import BytesIO
 import re
 
+PAGE_NAME = ""
+
 class MapPlot():
     """
     Class prepare data for plotting, considering input passed by user.
@@ -165,6 +167,9 @@ class MapPlotStatic(MapPlot):
                                            self.request["positioning2"]), 
                   alpha=0.5)
         plt.legend(loc='lower left', fontsize='xx-large', framealpha=1)
+        plt.figtext(0.15, 0.08, f"Made using: {PAGE_NAME}", wrap=True, 
+                    horizontalalignment='left', fontsize=10)
+
 
         buf = BytesIO()
         fig.savefig(buf, format="png")
@@ -219,10 +224,20 @@ class MapPlotDynamic(MapPlot):
         fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         fig.update_layout(legend=dict(
                             yanchor="bottom",
-                            y=0.01,
+                            y=0.04,
                             xanchor="left",
                             x=0.01)
                             )
+        fig.update_layout(annotations = [dict(
+            x=0.01,
+            y=0.01,    #Trying a negative number makes the caption disappear - I'd like the caption to be below the map
+            xref='paper',
+            yref='paper',
+            text=f"Made using: {PAGE_NAME}",
+            showarrow = False,
+            bgcolor="white",
+        )]
+)
         
         plot = fig.to_html(include_plotlyjs = False, full_html=False)
         return plot

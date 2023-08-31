@@ -37,6 +37,27 @@
 
 <div class="column is-8 is-offset-2">  
     <div class="block box has-text-centered">
+        <div class="block">
+            <p class="title is-4">Use predefined values or do custom query</p>
+            <div class="field">
+                <div class="control">
+                    <div class="control radio_form inline-grid-three-cols no-checked-color">
+                        <input id="predefined-1" name="predefined" type="button" value="pre-1" onclick="setForm('ów', 'owo')">
+                        <label for=predefined-1>
+                            -ów/-owo
+                        </label>
+                        <input id="predefined-2" name="predefined" type="button" value="pre-2" onclick="setForm('ewice', 'owice')">
+                        <label for=predefined-2>
+                            -ewice/-owice
+                        </label>  
+                        <input id="predefined-3" name="predefined" type="button" value="pre-3" onclick="setForm('ino', 'iny')">
+                        <label for=predefined-3>
+                            -ino/-iny
+                        </label>  
+                    </div>
+                </div>
+            </div>
+        </div>
         <form method="POST" name="url_form">
             <div class="columns block">
                 <div class="column is-half">

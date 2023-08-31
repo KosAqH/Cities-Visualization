@@ -7,7 +7,7 @@
     border-top-right-radius: 40px;
     border-bottom-right-radius: 40px;
 }
-.radio_form input[type="radio"] {
+.radio_form input[type="radio"], input[type="button"] {
     opacity: 0;
     position: fixed;
     width: 0;
@@ -38,4 +38,9 @@
 }
 .radio_form label:hover {
     background-color: #dfd;
+  }
+
+  .no-checked-color input:checked+label{
+    background-color: white;
+    border-color: #aaa;
   }

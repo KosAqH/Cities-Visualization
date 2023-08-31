@@ -1,6 +1,4 @@
 const form = document.querySelector('form');
-const static_map_container = document.getElementsByName('static_map_container')[0];
-const dynamic_map_container = document.getElementsByName('dynamic_map_container')[0];
 const map_container = document.getElementsByName('map_container')[0];
 const URL_s = "/static_plot";
 const URL_d = "/dynamic_plot";

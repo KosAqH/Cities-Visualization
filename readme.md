@@ -1,8 +1,8 @@
 # Polish cities localization
 
-A simple tool for visualising the location of cities.
+A simple tool for visualising the location of cities in Poland.
 
-Made in python. Used flask, plotly and matplotlib with basemap. List of packages required to run the app is in the requirements.txt file.
+Made in Python v3.10.7. Used flask, plotly and matplotlib with basemap. List of packages required to run the app is in the requirements.txt file.
 
 Used CSS framework Bulma: bulma.io/
 

@@ -2,8 +2,10 @@ from flask_wtf import Form
 from wtforms import StringField, RadioField, BooleanField
 from wtforms.validators import DataRequired, URL
 
-
 class MapInput(Form):
+    """
+    Class defines MapInput form using flask_wtf
+    """
     phrase1 = StringField(validators=[DataRequired()])
     phrase2 = StringField(validators=[DataRequired()])
 

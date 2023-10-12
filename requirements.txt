@@ -5,4 +5,5 @@ Flask_WTF==1.1.1
 matplotlib==3.7.2
 pandas==2.0.3
 plotly==5.16.1
+Werkzeug===2.3.6
 WTForms==3.0.1

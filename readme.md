@@ -18,3 +18,4 @@ Data as of 01.01.2023
 6. `python .\app\run.py`
 
 ### Showcase
+https://github.com/KosAqH/Cities-Visualization/assets/82679650/8a41bc3b-8c22-4a07-abfa-3c497b230f98
